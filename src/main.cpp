@@ -1,42 +1,29 @@
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <Arduino.h>
+#include <U8g2lib.h>
 #include <Wire.h>
 
-#define SCREEN_WIDTH 64
-#define SCREEN_HEIGHT 32
+U8G2_SSD1306_72X40_ER_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE, /* clock=*/ 6, /* data=*/ 5);
 
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
-
-void setup()
-{
-  delay(1000);
-
-  Wire.begin(5, 6);
-  delay(100);
-
-  if (display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
-  {
-    display.clearDisplay();
-    display.display();
-    delay(100);
-
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(SSD1306_WHITE);
-
-    display.setCursor(0, 0);
-    display.print("Lights");
-
-    display.setCursor(0, 12);
-    display.print("On:  18:30");
-
-    display.setCursor(0, 24);
-    display.print("Off: 23:00");
-
-    display.display();
-  }
+void setup() {
+  u8g2.begin();
+  
+  // Adjust contrast - try values between 0-255
+  // Start with 128 (medium) and adjust to taste
+  u8g2.setContrast(30);  // Try 100, 80, 60 if still too bright
+  
+  u8g2.clearBuffer();
+  
+  // Try a non-bold font
+  // u8g2_font_6x10_tr - clean, regular
+  // u8g2_font_5x7_tr - smaller, lighter
+  u8g2.setFont(u8g2_font_7x13_tr);  // Regular weight font
+  
+  u8g2.drawStr(2, 8, "Lights");
+  u8g2.drawStr(2, 25, "On:  18:30");
+  u8g2.drawStr(2, 38, "Off: 22:45");
+  
+  u8g2.sendBuffer();
 }
 
-void loop()
-{
+void loop() {
 }
